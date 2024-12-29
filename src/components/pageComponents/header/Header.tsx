@@ -24,7 +24,7 @@ export interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ title, companyIconOptions, profileIconOptions }) => {
     return (
-        <header className="header bg-light py-3">
+        <header className="container header bg-light py-3">
             <Container>
                 <Row className="align-items-center">
                     <Col>

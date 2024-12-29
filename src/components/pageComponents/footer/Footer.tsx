@@ -16,7 +16,7 @@ export interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ companyIconOptions, links }) => {
     return (
-        <footer className="footer bg-light py-3">
+        <footer className="container footer fixed-bottom bg-light py-3">
             <Container>
                 <Row className="align-items-center">
                     <Col>

@@ -6,8 +6,8 @@ const Body: React.FC = () => {
     return (
         <div className="container">
             <Row>
-                <Col></Col>
-                <Col></Col>
+                <Col md={1}>dd</Col>
+                <Col md={11}>ddd</Col>
             </Row>
             <Outlet />
         </div>

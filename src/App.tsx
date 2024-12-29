@@ -1,24 +1,29 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+import { Header, HeaderProps } from './components/pageComponents/header/Header';
+
+const iconSrc = "https://picsum.photos/150";
+
 function App() {
+  const headerProps: HeaderProps = {
+    title: "Appx UI",
+    companyIconOptions: {
+      src: iconSrc,
+      options: {
+        sizeOption: "small",
+      },
+    },
+    profileIconOptions: {
+      src: iconSrc,
+      options: {
+        sizeOption: "small",
+      }
+    },
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header {...headerProps} />
     </div>
   );
 }

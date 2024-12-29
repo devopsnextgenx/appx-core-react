@@ -28,9 +28,11 @@ export const Header: React.FC<HeaderProps> = ({ title, companyIconOptions, profi
             <Container>
                 <Row className="align-items-center">
                     <Col>
-                        <Icon src={companyIconOptions.src} options={companyIconOptions.options} />
+                        <div className="fload-left">
+                            <Icon src={companyIconOptions.src} options={companyIconOptions.options} />
+                        </div>
                     </Col>
-                    <Col className="text-center">
+                    <Col md={8} className="text-center">
                         <h1 className="m-0">{title}</h1>
                     </Col>
                     <Col className="text-right">

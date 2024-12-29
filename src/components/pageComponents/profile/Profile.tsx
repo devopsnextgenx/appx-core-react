@@ -39,7 +39,7 @@ export const Profile: React.FC = () => {
     };
 
     return (
-        <div className='float-end'>
+        <div className='float-center'>
             <UserOutlined style={{ fontSize: '24px', marginRight: '10px' }} />
             {isLoggedIn ? (
                 <Button icon={<LogoutOutlined />} onClick={handleLogout}>

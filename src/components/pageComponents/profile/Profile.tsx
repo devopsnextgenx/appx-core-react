@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Modal, Button, Form, Input, message } from 'antd';
-import { UserOutlined, LogoutOutlined, LoginOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import { Button, Form, Modal } from 'react-bootstrap';
+import { UserOutlined } from '@ant-design/icons';
 
 export const Profile: React.FC = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -20,86 +20,88 @@ export const Profile: React.FC = () => {
     const handleLogin = async () => {
         try {
             const auth = 'Basic ' + btoa(`${username}:${password}`);
+            console.log(`${auth}`);
             axios.defaults.headers.common['Authorization'] = auth;
             const response = await axios.get('/vapi/basic/api/generate-token');
             sessionStorage.setItem('jwtToken', response.data.accessToken);
             sessionStorage.setItem('refreshToken', response.data.refreshToken);
             setIsLoggedIn(true);
-            message.success('Login successful');
+            // message.success('Login successful');
             setIsModalVisible(false);
         } catch (error) {
-            message.error('Login failed');
+            // message.error('Login failed');
         }
     };
 
     const handleLogout = () => {
         sessionStorage.removeItem('jwtToken');
         setIsLoggedIn(false);
-        message.success('Logout successful');
+        // message.success('Logout successful');
     };
 
     return (
         <div className='float-center'>
             <UserOutlined style={{ fontSize: '24px', marginRight: '10px' }} />
             {isLoggedIn ? (
-                <Button icon={<LogoutOutlined />} onClick={handleLogout}>
+                <Button onClick={handleLogout} >
                     Logout
                 </Button>
             ) : (
-                <Button icon={<LoginOutlined />} onClick={showModal}>
+                <Button onClick={showModal}>
                     Login
                 </Button>
             )}
-            <Modal
-                title="Login"
-                visible={isModalVisible}
-                onCancel={handleCancel}
-                footer={null}
-            >
-                <Form
-                    layout="vertical"
-                    onFinish={handleLogin}
-                >
-                    <Form.Item
-                        label="Username"
-                        name="username"
-                        rules={[{ required: true, message: 'Please input your username!' }]}
-                    >
-                        <Input
-                            value={username}
-                            onChange={(e: any) => setUsername(e.target.value)}
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        label="Password"
-                        name="password"
-                        rules={[{ required: true, message: 'Please input your password!' }]}
-                    >
-                        <Input.Password
-                            value={password}
-                            onChange={(e: any) => setPassword(e.target.value)}
-                        />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">
-                            Login
-                        </Button>
-                        <Button
-                            style={{ marginLeft: '10px' }}
-                            onClick={() => {
-                                setUsername('');
-                                setPassword('');
-                            }}
-                        >
-                            Reset
-                        </Button>
-                        <Button
-                            style={{ marginLeft: '10px' }}
-                            onClick={handleCancel}
-                        >
-                            Cancel
-                        </Button>
-                    </Form.Item>
+            <Modal show={isModalVisible} onHide={handleCancel}>
+                <Form onSubmit={handleLogin}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Login</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form.Group controlId="formUsername">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={username}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formPassword">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control
+                                type="password"
+                                value={password}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Form.Group>
+                            <Button
+                                variant="danger"
+                                onClick={() => {
+                                    setUsername('');
+                                    setPassword('');
+                                }}
+                                style={{ marginLeft: '10px' }}
+                            >
+                                Reset
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                onClick={handleCancel}
+                                style={{ marginLeft: '10px' }}
+                            >
+                                Cancel
+                            </Button>
+                            <Button variant="primary" type="submit"
+                                style={{ marginLeft: '10px' }}
+                            >
+                                Login
+                            </Button>
+                        </Form.Group>
+                    </Modal.Footer>
                 </Form>
             </Modal>
         </div>

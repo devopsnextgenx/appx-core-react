@@ -18,7 +18,7 @@ const Users: React.FC = () => {
         const fetchUsers = async () => {
             try {
                 const token = sessionStorage.getItem('jwtToken');
-                const response = await axios.get('/vapi/api/users', {
+                const response = await axios.get('/user-auth-api/api/users', {
                     headers: {
                         Authorization: `${token}`
                     }

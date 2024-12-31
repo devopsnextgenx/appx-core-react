@@ -22,7 +22,7 @@ export const Profile: React.FC = () => {
             const auth = 'Basic ' + btoa(`${username}:${password}`);
             console.log(`${auth}`);
             axios.defaults.headers.common['Authorization'] = auth;
-            const response = await axios.get('/vapi/basic/api/generate-token');
+            const response = await axios.get('/user-auth-api/basic/api/generate-token');
             sessionStorage.setItem('jwtToken', response.data.accessToken);
             sessionStorage.setItem('refreshToken', response.data.refreshToken);
             setIsLoggedIn(true);

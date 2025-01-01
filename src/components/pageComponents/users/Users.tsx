@@ -44,7 +44,7 @@ const Users: React.FC = () => {
         };
 
         fetchUsers();
-    }, [users]);
+    }, []);
 
     return (
         <div>
@@ -84,6 +84,7 @@ const Users: React.FC = () => {
                         await axios.post('/user-auth-api/api/users', registerUser);
                         setIsRegisterModalVisible(false);
                         users.push(registerUser);
+                        setUsers([...users]);
                     } catch (error) {
                         // message.error('Registration failed');
                     }

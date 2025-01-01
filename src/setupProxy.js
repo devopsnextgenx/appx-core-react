@@ -17,4 +17,12 @@ module.exports = function(app) {
       secure: false
     })
   );
+  app.use(
+    '/oauth2-api',
+    createProxyMiddleware({
+      target: 'https://react.appx.localtest.me:5000',
+      changeOrigin: true,
+      secure: false
+    })
+  );
 };

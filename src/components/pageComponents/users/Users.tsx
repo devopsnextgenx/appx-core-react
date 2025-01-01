@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Table } from 'react-bootstrap';
 import axios from 'axios';
+import Select from 'react-select';
+import { Button, Container, Form, Table } from 'react-bootstrap';
+import './Users.css';
+
+const roleOptions = [
+    { value: 'SYSTEM_ADMINISTRATOR', label: 'System Administrator' },
+    { value: 'ORGANIZATION_ADMINISTRATOR', label: 'Organization Administrator' },
+    { value: 'DATA_MANAGER', label: 'Data Manager' },
+    { value: 'COMPANY_ADMINISTRATOR', label: 'Company Administrator' },
+    { value: 'SERVICE_ACCOUNT', label: 'Service Account' },
+];
 
 interface User {
     userName: string;
@@ -11,9 +21,13 @@ interface User {
     roles: string[];
 }
 
+
 const Users: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
 
+    const [isRegisterModalVisible, setIsRegisterModalVisible] = useState(false);
+    const [registerUser, setRegisterUser] = useState({ active: true } as User);
+    
     useEffect(() => {
         const fetchUsers = async () => {
             try {
@@ -30,7 +44,7 @@ const Users: React.FC = () => {
         };
 
         fetchUsers();
-    }, []);
+    }, [users]);
 
     return (
         <div>
@@ -54,11 +68,95 @@ const Users: React.FC = () => {
                             <td>{user.lastName}</td>
                             <td>{user.email}</td>
                             <td>{user.active ? 'Yes' : 'No'}</td>
-                            <td>{user.roles.map(role=> <li>{role}</li>)}</td>
+                            <td>{user.roles.map(role => <li>{role}</li>)}</td>
                         </tr>
                     ))}
                 </tbody>
             </Table>
+            <Container className='register-user'>
+                <Form onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
+                    e.preventDefault();
+                    try {
+                        const jwtToken = sessionStorage.getItem('jwtToken');
+                        if (jwtToken) {
+                            axios.defaults.headers.common['Authorization'] = `${jwtToken}`;
+                        }
+                        await axios.post('/user-auth-api/api/users', registerUser);
+                        setIsRegisterModalVisible(false);
+                        users.push(registerUser);
+                    } catch (error) {
+                        // message.error('Registration failed');
+                    }
+                }}>
+                    <Form.Group controlId="formRegisterUsername">
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={registerUser.userName}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                setRegisterUser({ ...registerUser, userName: e.target.value })
+                            }
+                            required
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="formRegisterFirstName">
+                        <Form.Label>First Name</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={registerUser.firstName}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                setRegisterUser({ ...registerUser, firstName: e.target.value })
+                            }
+                            required
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="formRegisterLastName">
+                        <Form.Label>Last Name</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={registerUser.lastName}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                setRegisterUser({ ...registerUser, lastName: e.target.value })
+                            }
+                            required
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="formRegisterEmail">
+                        <Form.Label>Email</Form.Label>
+                        <Form.Control
+                            type="email"
+                            value={registerUser.email}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                setRegisterUser({ ...registerUser, email: e.target.value })
+                            }
+                            required
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="formRegisterRoles">
+                        <Form.Label>Roles</Form.Label>
+                        <Select
+                            isMulti
+                            options={roleOptions}
+                            value={roleOptions.filter(option => registerUser.roles?.includes(option.value))}
+                            onChange={(selectedOptions) =>
+                                setRegisterUser({
+                                    ...registerUser,
+                                    roles: selectedOptions ? selectedOptions.map(option => option.value) : []
+                                })
+                            }
+                        />
+                    </Form.Group>
+                    
+                    <div>
+                        <Button className="register pull-right" variant="secondary" onClick={() => setIsRegisterModalVisible(false)}>
+                            Cancel
+                        </Button>
+                        <Button className="register pull-right" variant="primary" type="submit">
+                            Register
+                        </Button>
+                    </div>
+                </Form>
+            </Container>
         </div>
     );
 };

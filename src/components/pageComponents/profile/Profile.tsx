@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import Select from 'react-select';
 import { Button, Form, Modal } from 'react-bootstrap';
 import { UserOutlined } from '@ant-design/icons';
-import './Profile.css';
-
 
 export const Profile: React.FC = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(sessionStorage.getItem('jwtToken') ? true : false);
-
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -51,12 +47,12 @@ export const Profile: React.FC = () => {
                     Logout
                 </Button>
             ) : (
-                <Button className='profile-action' onClick={showModal}>
+                <Button onClick={showModal}>
                     Login
                 </Button>
             )}
             <Modal show={isModalVisible} onHide={handleCancel}>
-                <Form onSubmit={handleLogin}>
+                <Form>
                     <Modal.Header closeButton>
                         <Modal.Title>Login</Modal.Title>
                     </Modal.Header>
@@ -79,15 +75,6 @@ export const Profile: React.FC = () => {
                                 required
                             />
                         </Form.Group>
-                        <Form.Group>
-                            <iframe
-                                src="/oauth2-api/login"
-                                title="SSO Login"
-                                width="100%"
-                                height="400px"
-                                style={{ border: 'none' }}
-                            ></iframe>
-                        </Form.Group>
                     </Modal.Body>
                     <Modal.Footer>
                         <Form.Group>
@@ -108,8 +95,9 @@ export const Profile: React.FC = () => {
                             >
                                 Cancel
                             </Button>
-                            <Button variant="primary" type="submit"
+                            <Button variant="primary"
                                 style={{ marginLeft: '10px' }}
+                                onClick={handleLogin}
                             >
                                 Login
                             </Button>
